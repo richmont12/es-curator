@@ -2,7 +2,8 @@
 
 'es-curator' will be a platform to curate possibly everything that can be described. 
 
-More information about the idea on [notes/idea.md](notes/idea.md).
+* More information about the idea on [notes/idea.md](notes/idea.md).
+* A roadmap can be found on [docs/roadmap.md](docs/roadmap.md).
 
 
 ## repo overview
