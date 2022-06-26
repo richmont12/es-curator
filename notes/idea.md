@@ -1,13 +1,13 @@
 # es-curator
 
 This solution shall give the user a platform to:
-    * collect any type of record 
-    * any logged in user can write review for a record
-    * privileged users now named curators can choose review to be pinned visibly on the record
-    * any logged in user can link the record to any other 
-        * review/record on this platform
-        * URL
-    * curators can pin those links, curate them
+* collect any type of record 
+* any logged in user can write review for a record
+* privileged users now named curators can choose review to be pinned visibly on the record
+* any logged in user can link the record to any other 
+    * review/record on this platform
+    * URL
+* curators can pin those links, curate them
 
 ## Techincal decisions
 * frontend: react with serverside rendering
@@ -17,3 +17,6 @@ This solution shall give the user a platform to:
 ## Coding/architecture guidelines and principles
 * we will use semantic versioning with feature branches and squash commits
 * services run in a container
+
+
+´every staff | every shit | electronic sounds | entire souls | ...´
