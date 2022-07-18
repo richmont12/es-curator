@@ -1,4 +1,4 @@
-package main
+package datastore
 
 import (
 	"context"
@@ -11,41 +11,8 @@ import (
 	"go.mongodb.org/mongo-driver/mongo/options"
 )
 
-type ExternalLink struct {
-	ID  string `json:"id"`
-	Url string `json:"url"`
-}
-type CuratedRecord struct {
-	ID            string         `json:"id"`
-	Headline      string         `json:"headline"`
-	Description   string         `json:"description"`
-	ExternalLinks []ExternalLink `json:"external-links"`
-}
-
-func main() {
-	client := connectAndGetClient()
-
-	disconnect(client)
-}
-
-func SayHello() {
-	client := connectAndGetClient()
-	if client == nil {
-		return
-	}
-
-	disconnect(client)
-}
-
-func Insert(description string, headline string) (record CuratedRecord) {
-	client := connectAndGetClient()
-	if client == nil {
-		return
-	}
-	record = insertCore(client, description, headline)
-
-	disconnect(client)
-	return
+func sayHello() {
+	fmt.Println("Hello world from data-store.")
 }
 
 func disconnect(client *mongo.Client) {
@@ -79,7 +46,29 @@ func connectAndGetClient() (client *mongo.Client) {
 	return client
 }
 
-func insertCore(client *mongo.Client, description string, headline string) (record CuratedRecord) {
+func get(client *mongo.Client) (records []CuratedRecord) {
+	collection := client.Database("es-curator").Collection("curatedRecords")
+	records = getCore(collection)
+	return
+}
+
+func getCore(collection *mongo.Collection) (records []CuratedRecord) {
+	cur, err := collection.Find(context.TODO(), bson.D{})
+	if err != nil {
+		log.Fatal(err)
+		return
+	}
+
+	var results []CuratedRecord
+
+	err = cur.All(context.Background(), &results)
+	if err != nil {
+		log.Fatal(err)
+		return
+	}
+	return
+}
+func create(client *mongo.Client, description string, headline string) (record CuratedRecord) {
 	collection := client.Database("es-curator").Collection("curatedRecords")
 	record = CuratedRecord{
 		ID:            getNextIdOfCurratedRecord(collection),
@@ -98,21 +87,7 @@ func insertCore(client *mongo.Client, description string, headline string) (reco
 }
 
 func getNextIdOfCurratedRecord(recordCollection *mongo.Collection) (nextId string) {
-	ctx := context.TODO()
-	cur, err := recordCollection.Find(ctx, bson.D{})
-	if err != nil {
-		log.Fatal(err)
-		return
-	}
-
-	var results []CuratedRecord
-
-	err = cur.All(context.Background(), &results)
-	if err != nil {
-		log.Fatal(err)
-		return
-	}
-
+	results := getCore(recordCollection)
 	var highestId int64
 	highestId = 0
 
