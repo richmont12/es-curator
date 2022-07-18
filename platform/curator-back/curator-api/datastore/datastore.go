@@ -1,15 +1,24 @@
 package datastore
 
-func SayHello() {
+import "es-curator/curator-api/abstractions"
+
+type DataStore struct {
+}
+
+func CreateDataStore() *DataStore {
+	return &DataStore{}
+}
+
+func (store *DataStore) SayHello() {
 	sayHello()
 }
 
-func SayHelloToDataStoreInBackground() {
+func (store *DataStore) SayHelloToDataStoreInBackground() {
 	client := connectAndGetClient()
 	disconnect(client)
 }
 
-func Get() (records []CuratedRecord) {
+func (store *DataStore) Get() (records []abstractions.CuratedRecord) {
 	client := connectAndGetClient()
 	if client == nil {
 		return
@@ -20,7 +29,7 @@ func Get() (records []CuratedRecord) {
 	return
 }
 
-func Create(description string, headline string) (record CuratedRecord) {
+func (store *DataStore) Create(description string, headline string) (record abstractions.CuratedRecord) {
 	client := connectAndGetClient()
 	if client == nil {
 		return

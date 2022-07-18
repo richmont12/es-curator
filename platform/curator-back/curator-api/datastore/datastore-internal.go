@@ -2,6 +2,7 @@ package datastore
 
 import (
 	"context"
+	"es-curator/curator-api/abstractions"
 	"fmt"
 	"log"
 	"strconv"
@@ -46,20 +47,20 @@ func connectAndGetClient() (client *mongo.Client) {
 	return client
 }
 
-func get(client *mongo.Client) (records []CuratedRecord) {
+func get(client *mongo.Client) (records []abstractions.CuratedRecord) {
 	collection := client.Database("es-curator").Collection("curatedRecords")
 	records = getCore(collection)
 	return
 }
 
-func getCore(collection *mongo.Collection) (records []CuratedRecord) {
+func getCore(collection *mongo.Collection) (records []abstractions.CuratedRecord) {
 	cur, err := collection.Find(context.TODO(), bson.D{})
 	if err != nil {
 		log.Fatal(err)
 		return
 	}
 
-	var results []CuratedRecord
+	var results []abstractions.CuratedRecord
 
 	err = cur.All(context.Background(), &results)
 	if err != nil {
@@ -68,13 +69,13 @@ func getCore(collection *mongo.Collection) (records []CuratedRecord) {
 	}
 	return
 }
-func create(client *mongo.Client, description string, headline string) (record CuratedRecord) {
+func create(client *mongo.Client, description string, headline string) (record abstractions.CuratedRecord) {
 	collection := client.Database("es-curator").Collection("curatedRecords")
-	record = CuratedRecord{
+	record = abstractions.CuratedRecord{
 		ID:            getNextIdOfCurratedRecord(collection),
 		Headline:      headline,
 		Description:   description,
-		ExternalLinks: []ExternalLink{},
+		ExternalLinks: []abstractions.ExternalLink{},
 	}
 
 	insertResult, err := collection.InsertOne(context.TODO(), record)

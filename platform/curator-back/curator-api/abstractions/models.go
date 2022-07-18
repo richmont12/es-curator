@@ -1,4 +1,4 @@
-package datastore
+package abstractions
 
 type ExternalLink struct {
 	ID  string `json:"id"`
