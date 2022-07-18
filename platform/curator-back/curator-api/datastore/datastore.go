@@ -9,12 +9,9 @@ func CreateDataStore() *DataStore {
 	return &DataStore{}
 }
 
-func (store *DataStore) SayHello() {
-	sayHello()
-}
-
 func (store *DataStore) SayHelloToDataStoreInBackground() {
 	client := connectAndGetClient()
+	get(client)
 	disconnect(client)
 }
 

@@ -10,8 +10,6 @@ func main() {
 	fmt.Println("Hello world from curator-api.")
 
 	dataStore := datastore.CreateDataStore()
-	dataStore.SayHello()
 	dataStore.SayHelloToDataStoreInBackground()
-	// datastore.Get()
 	api.StartListen(dataStore)
 }

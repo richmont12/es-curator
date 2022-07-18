@@ -29,7 +29,7 @@ func connectAndGetClient() (client *mongo.Client) {
 	// Set client options
 	// Connect to MongoDB
 	// Check the connection
-	clientOptions := options.Client().ApplyURI("mongodb://localhost:27017")
+	clientOptions := options.Client().ApplyURI("mongodb://root:rootpassword@localhost:27017")
 
 	client, err := mongo.Connect(context.TODO(), clientOptions)
 
