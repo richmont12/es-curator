@@ -27,26 +27,40 @@ func (api *Api) StartListen() {
 	router := gin.Default()
 
 	router.GET("/records", func(ctx *gin.Context) {
-		getCuratedRecords(api, ctx)
+		api.getCuratedRecords(ctx)
 	})
 	router.POST("/records", func(ctx *gin.Context) {
-		createCuratedRecord(api, ctx)
+		api.createCuratedRecord(ctx)
 	})
 
 	router.Run("localhost:8080")
 }
 
-func createCuratedRecord(api *Api, c *gin.Context) {
+func (api *Api) createCuratedRecord(c *gin.Context) {
 	var dto CreateCuratedRecordRequest
+
+	// jsonData, err := ioutil.ReadAll(c.Request.Body)
+	// if err != nil {
+	// 	fmt.Println("Failed to read body.")
+	// 	return
+	// }
+	// jsonBody := string(jsonData)
+	// fmt.Println("Read body: ", jsonBody)
+
 	if err := c.BindJSON(&dto); err != nil {
+		c.AbortWithStatusJSON(http.StatusBadRequest,
+			gin.H{
+				"error":   "VALIDATEERR-1",
+				"message": err.Error()})
+		c.AbortWithError(http.StatusBadRequest, err)
+		fmt.Println("Failed to bind json to create record.")
 		return
 	}
-	record := api.dataStore.Create(dto.description, dto.headline)
+	record := api.dataStore.Create(dto.Description, dto.Headline)
 	c.IndentedJSON(http.StatusOK, record)
 }
 
-// responds with all curated records
-func getCuratedRecords(api *Api, c *gin.Context) {
+func (api *Api) getCuratedRecords(c *gin.Context) {
 	records := api.dataStore.Get()
 	c.IndentedJSON(http.StatusOK, records)
 }

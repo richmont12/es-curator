@@ -1,6 +1,6 @@
 package api
 
 type CreateCuratedRecordRequest struct {
-	headline    string
-	description string
+	Headline    string `json:"headline"`
+	Description string `json:"description"`
 }

@@ -64,9 +64,23 @@ func getCore(collection *mongo.Collection) (records []abstractions.CuratedRecord
 		log.Fatal(err)
 		return
 	}
-	return
+
+	for _, rec := range results {
+		fmt.Println(
+			"Loaded record =",
+			"Id:", rec.ID,
+			"Headline:", rec.Headline,
+			"Description:", rec.Description)
+	}
+
+	return results
 }
 func create(client *mongo.Client, description string, headline string) (record abstractions.CuratedRecord) {
+	fmt.Println(
+		"Starting to insert record =",
+		"Headline:", headline,
+		"Description:", description)
+
 	collection := client.Database("es-curator").Collection("curatedRecords")
 	record = abstractions.CuratedRecord{
 		ID:            getNextIdOfCurratedRecord(collection),
@@ -80,7 +94,12 @@ func create(client *mongo.Client, description string, headline string) (record a
 		log.Fatal(err)
 	}
 
-	fmt.Println("Inserted a single document: ", insertResult.InsertedID)
+	fmt.Println(
+		"Inserted record =",
+		"Id:", record.ID,
+		"Headline:", record.Headline,
+		"Description:", record.Description,
+		"document-id:", insertResult.InsertedID)
 	return
 }
 
