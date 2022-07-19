@@ -13,7 +13,7 @@ import (
 )
 
 func sayHello() {
-	fmt.Println("Hello world from data-store.")
+	fmt.Println("Hello world from datastore.")
 }
 
 func disconnect(client *mongo.Client) {
@@ -26,9 +26,6 @@ func disconnect(client *mongo.Client) {
 }
 
 func connectAndGetClient() (client *mongo.Client) {
-	// Set client options
-	// Connect to MongoDB
-	// Check the connection
 	clientOptions := options.Client().ApplyURI("mongodb://root:rootpassword@localhost:27017")
 
 	client, err := mongo.Connect(context.TODO(), clientOptions)
