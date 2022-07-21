@@ -29,6 +29,9 @@ func (api *Api) StartListen() {
 	router.GET("/records", func(ctx *gin.Context) {
 		api.getCuratedRecords(ctx)
 	})
+	router.GET("/records/:id", func(ctx *gin.Context) {
+		api.getCuratedRecord(ctx)
+	})
 	router.POST("/records", func(ctx *gin.Context) {
 		api.createCuratedRecord(ctx)
 	})
@@ -56,11 +59,16 @@ func (api *Api) createCuratedRecord(c *gin.Context) {
 		fmt.Println("Failed to bind json to create record.")
 		return
 	}
-	record := api.dataStore.Create(dto.Description, dto.Headline)
+	record := api.dataStore.CreateCuratedRecord(dto.Description, dto.Headline)
 	c.IndentedJSON(http.StatusOK, record)
 }
 
 func (api *Api) getCuratedRecords(c *gin.Context) {
-	records := api.dataStore.Get()
+	records := api.dataStore.GetAllCuratedRecords()
 	c.IndentedJSON(http.StatusOK, records)
+}
+func (api *Api) getCuratedRecord(c *gin.Context) {
+	id := c.Param("id")
+	record := api.dataStore.GetCuratedRecord(id)
+	c.IndentedJSON(http.StatusOK, record)
 }

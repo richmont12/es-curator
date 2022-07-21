@@ -44,9 +44,38 @@ func connectAndGetClient() (client *mongo.Client) {
 	return client
 }
 
-func get(client *mongo.Client) (records []abstractions.CuratedRecord) {
+func getAllCuratedRecords(client *mongo.Client) (records []abstractions.CuratedRecord) {
 	collection := client.Database("es-curator").Collection("curatedRecords")
 	records = getCore(collection)
+	return
+}
+
+func getCuratedRecord(client *mongo.Client, recordId string) (record abstractions.CuratedRecord) {
+	collection := client.Database("es-curator").Collection("curatedRecords")
+	cur, err := collection.Find(context.TODO(), bson.D{{Key: "id", Value: recordId}})
+	if err != nil {
+		log.Fatal(err)
+		return
+	}
+	var results []abstractions.CuratedRecord
+
+	err = cur.All(context.Background(), &results)
+	if err != nil {
+		log.Fatal(err)
+		return
+	}
+
+	for _, rec := range results {
+		fmt.Println(
+			"Loaded record =",
+			"Id:", rec.ID,
+			"Headline:", rec.Headline,
+			"Description:", rec.Description)
+	}
+
+	if len(results) == 1 {
+		return results[0]
+	}
 	return
 }
 
